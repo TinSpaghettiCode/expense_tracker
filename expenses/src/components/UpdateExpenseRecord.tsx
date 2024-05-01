@@ -16,39 +16,45 @@ import {
   Textarea,
   chakra,
 } from "@chakra-ui/react";
-import { useFrappeCreateDoc } from "frappe-react-sdk";
+import { useFrappeUpdateDoc } from "frappe-react-sdk";
 import { useForm } from "react-hook-form";
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
   mutate: () => void;
+  initialData: FormFields; // Thêm prop này để nhận dữ liệu ban đầu
 };
 
 interface FormFields {
+  name: string;
   description: string;
   amount: number;
   type: string;
   remarks: string;
 }
 
-export const AddExpenseRecord = ({ isOpen, onClose, mutate }: Props) => {
+export const UpdateExpenseRecord = ({
+  isOpen,
+  onClose,
+  mutate,
+  initialData,
+}: Props) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
-  } = useForm<FormFields>();
+  } = useForm<FormFields>({
+    defaultValues: initialData, // Khởi tạo form với dữ liệu ban đầu
+  });
 
-  const { createDoc, loading } = useFrappeCreateDoc();
+  const { updateDoc, loading } = useFrappeUpdateDoc();
 
   const onSubmit = (data: FormFields) => {
-    createDoc("Expense Record", data)
+    updateDoc("Expense Record", initialData.name, data) // Sử dụng updateDoc thay vì createDoc
       .then(() => {
-        console.log("Expense Record created");
+        console.log("Expense Record updated");
         onClose();
-        reset();
-        // Reset data
         mutate();
       })
       .catch((e) => {
@@ -61,7 +67,8 @@ export const AddExpenseRecord = ({ isOpen, onClose, mutate }: Props) => {
       <chakra.form onSubmit={handleSubmit(onSubmit)}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+          <ModalHeader>Update Expense Record</ModalHeader>{" "}
+          {/* Thay đổi tiêu đề */}
           <ModalCloseButton />
           <ModalBody>
             <Stack>
@@ -123,7 +130,7 @@ export const AddExpenseRecord = ({ isOpen, onClose, mutate }: Props) => {
               Close
             </Button>
             <Button colorScheme="blue" type="submit" isLoading={loading}>
-              Save
+              Update {/* Thay đổi nút Save thành Update */}
             </Button>
           </ModalFooter>
         </ModalContent>
