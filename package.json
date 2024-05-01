@@ -1,0 +1,19 @@
+{
+  "name": "expense_tracker",
+  "version": "1.0.0",
+  "description": "An app to track expenses",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "cd expenses && yarn install",
+    "dev": "cd expenses && yarn dev",
+    "build": "cd expenses && yarn build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.12.7"
+  }
+}
